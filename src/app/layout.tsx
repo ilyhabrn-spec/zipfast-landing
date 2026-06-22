@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Inter, Onest } from "next/font/google";
 import { site } from "@/lib/constants";
+import { seo, absoluteUrl } from "@/lib/seo";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { YandexMetrika } from "@/components/seo/YandexMetrika";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { ScrollProvider } from "@/components/providers/ScrollProvider";
@@ -23,32 +26,38 @@ const onest = Onest({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(site.url),
   title: {
-    default: `${site.name} — сервис пищевого оборудования`,
+    default: seo.title,
     template: `%s | ${site.name}`,
   },
-  description: site.description,
-  keywords: [
-    "ремонт пищевого оборудования",
-    "сервис Rational",
-    "ЗИП ФАСТ",
-    "Алтайский край",
-    "Республика Алтай",
-    "промышленное оборудование",
-  ],
+  description: seo.description,
+  keywords: [...seo.keywords],
+  alternates: {
+    canonical: absoluteUrl(),
+  },
   openGraph: {
-    title: site.name,
-    description: site.description,
+    title: seo.title,
+    description: seo.description,
     type: "website",
-    locale: "ru_RU",
+    locale: seo.locale,
     siteName: site.name,
+    url: absoluteUrl(),
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: { index: true, follow: true },
   },
+  verification: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION
+    ? { yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION }
+    : undefined,
   icons: {
     icon: "/icon.svg",
+  },
+  other: {
+    "geo.region": "RU-ALT",
+    "geo.placename": site.region,
   },
 };
 
@@ -60,6 +69,8 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <body className={`${inter.className} ${onest.variable} min-h-screen`}>
+        <JsonLd />
+        <YandexMetrika />
         <ScrollProvider>
           <AmbientCanvas />
           <ScrollOrchestrator />
