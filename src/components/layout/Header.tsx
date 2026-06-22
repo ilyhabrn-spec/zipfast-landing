@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useLenis } from "@/components/providers/ScrollProvider";
 import { useEffect, useState } from "react";
 import { navLinks, site } from "@/lib/constants";
@@ -56,8 +57,8 @@ export function Header() {
             : "h-[4.25rem] sm:h-20 lg:h-[5.5rem]"
         }`}
       >
-        <a
-          href="#top"
+        <Link
+          href="/"
           className="header-brand group flex min-w-0 shrink items-center gap-2 sm:gap-3 lg:gap-4"
         >
           <span className="header-logo-mark inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-accent font-display text-sm font-bold text-accent-foreground shadow-[var(--shadow-red)] sm:h-10 sm:w-10 sm:rounded-2xl sm:text-base lg:h-12 lg:w-12 lg:text-lg">
@@ -71,7 +72,7 @@ export function Header() {
               {site.headerRegion}
             </span>
           </div>
-        </a>
+        </Link>
 
         <ul className="hidden min-w-0 flex-1 items-center justify-center gap-4 lg:flex xl:gap-9">
           {navLinks.map((link, index) => (

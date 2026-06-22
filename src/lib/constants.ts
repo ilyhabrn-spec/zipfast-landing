@@ -3,7 +3,7 @@ export const site = {
   tagline: "Промышленный сервис пищевого оборудования в Алтайском крае и Республике Алтай",
   description:
     "ЗИП ФАСТ — ремонт, диагностика и сервисное обслуживание промышленного пищевого, холодильного, теплового, моечного и стирального оборудования в Алтайском крае и Республике Алтай с 2013 года.",
-  url: "https://zipfast.example",
+  url: "https://zip-fast.ru",
   region: "Алтайский край и Республика Алтай",
   headerRegion: "Алтайский край",
   foundedYear: 2013,
@@ -37,12 +37,12 @@ export const socials = [
 ] as const;
 
 export const navLinks = [
-  { label: "О компании", href: "#about" },
-  { label: "Услуги", href: "#features" },
-  { label: "Бренды", href: "#brands" },
-  { label: "Процесс", href: "#how-it-works" },
-  { label: "Отзывы", href: "#testimonials" },
-  { label: "Контакты", href: "#cta" },
+  { label: "О компании", href: "/#about" },
+  { label: "Услуги", href: "/#features" },
+  { label: "Бренды", href: "/#brands" },
+  { label: "Процесс", href: "/#how-it-works" },
+  { label: "Отзывы", href: "/#testimonials" },
+  { label: "Контакты", href: "/#cta" },
 ] as const;
 
 export const hero = {
@@ -216,6 +216,7 @@ export const cta = {
 export const footer = {
   copyright: `© ${new Date().getFullYear()} ${site.name}. Все права защищены.`,
   links: [
+    { label: "Сервис Rush", href: "/game" },
     { label: "Политика конфиденциальности", href: "#" },
     { label: "Условия использования", href: "#" },
   ],

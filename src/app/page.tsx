@@ -6,6 +6,7 @@ import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { Cta } from "@/components/sections/Cta";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
+import { GamePromoPopup } from "@/components/ui/GamePromoPopup";
 
 export default function HomePage() {
   return (
@@ -28,6 +29,7 @@ export default function HomePage() {
       <HowItWorks />
       <Testimonials />
       <Cta />
+      <GamePromoPopup />
     </>
   );
 }

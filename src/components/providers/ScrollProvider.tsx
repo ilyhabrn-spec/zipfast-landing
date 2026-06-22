@@ -52,19 +52,34 @@ export function ScrollProvider({ children }: { children: ReactNode }) {
     rafId = requestAnimationFrame(raf);
 
     const onAnchorClick = (event: MouseEvent) => {
-      const anchor = (event.target as Element).closest('a[href^="#"]');
+      const anchor = (event.target as Element).closest("a[href*='#']");
       if (!(anchor instanceof HTMLAnchorElement)) return;
 
-      const hash = anchor.getAttribute("href");
-      if (!hash || hash === "#") return;
+      const href = anchor.getAttribute("href");
+      if (!href || href === "#") return;
 
-      const id = decodeURIComponent(hash.slice(1));
+      let linkPath: string;
+      let id: string;
+
+      if (href.startsWith("#")) {
+        linkPath = window.location.pathname;
+        id = decodeURIComponent(href.slice(1));
+      } else {
+        const hashIndex = href.indexOf("#");
+        if (hashIndex === -1) return;
+        linkPath = href.slice(0, hashIndex) || "/";
+        id = decodeURIComponent(href.slice(hashIndex + 1));
+      }
+
+      if (!id) return;
+      if (linkPath !== window.location.pathname) return;
+
       const target = document.getElementById(id);
       if (!target) return;
 
       event.preventDefault();
       instance.scrollTo(target, { offset: -getHeaderOffset(), duration: 1.15 });
-      window.history.replaceState(null, "", hash);
+      window.history.replaceState(null, "", `#${id}`);
     };
 
     document.addEventListener("click", onAnchorClick);
