@@ -1,8 +1,9 @@
 "use client";
 
 import Script from "next/script";
+import { seo } from "@/lib/seo";
 
-const counterId = process.env.NEXT_PUBLIC_YM_COUNTER_ID;
+const counterId = process.env.NEXT_PUBLIC_YM_COUNTER_ID ?? seo.ymCounterId;
 
 export function YandexMetrika() {
   if (!counterId) return null;
