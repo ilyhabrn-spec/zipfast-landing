@@ -2,6 +2,7 @@ import { contacts, site } from "@/lib/constants";
 
 export const seo = {
   title: "ЗИП ФАСТ — ремонт пищевого оборудования в Алтайском крае",
+  yandexVerification: "d419101082c7ba08",
   description:
     "Ремонт и сервис промышленного пищевого, холодильного и теплового оборудования в Алтайском крае и Республике Алтай. Rational, Unox, MKN, Miwe. Выезд инженера. ☎ +7 (962) 806-27-70",
   keywords: [

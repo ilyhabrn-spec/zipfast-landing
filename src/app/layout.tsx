@@ -49,9 +49,9 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
-  verification: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION
-    ? { yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION }
-    : undefined,
+  verification: {
+    yandex: process.env.NEXT_PUBLIC_YANDEX_VERIFICATION ?? seo.yandexVerification,
+  },
   icons: {
     icon: "/icon.svg",
   },
