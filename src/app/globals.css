@@ -1502,6 +1502,7 @@
   .scroll-progress-fill {
     height: 100%;
     width: 100%;
+    transform: scale3d(0, 1, 1);
     transform-origin: left center;
     background: linear-gradient(
       90deg,
@@ -1513,7 +1514,6 @@
     box-shadow:
       0 0 12px rgba(230, 0, 18, 0.55),
       0 0 24px rgba(230, 0, 18, 0.25);
-    transition: transform 80ms linear;
     will-change: transform;
   }
 

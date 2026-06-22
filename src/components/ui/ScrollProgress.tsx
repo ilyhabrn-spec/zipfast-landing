@@ -1,7 +1,7 @@
 "use client";
 
 import { useLenis } from "@/components/providers/ScrollProvider";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Section = { id: string; label: string };
 
@@ -24,34 +24,50 @@ function getSectionTop(el: HTMLElement) {
 
 export function ScrollProgress({ sections }: ScrollProgressProps) {
   const lenis = useLenis();
-  const [progress, setProgress] = useState(0);
+  const fillRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef(0);
   const [activeId, setActiveId] = useState<string>(sections[0]?.id ?? "top");
 
   const ids = useMemo(() => sections.map((s) => s.id), [sections]);
 
-  const updateActiveSection = useCallback(() => {
-    const offset = getHeaderOffset();
-    const marker = window.scrollY + offset;
-
-    let current = sections[0]?.id ?? "top";
-
-    for (const section of sections) {
-      const el = document.getElementById(section.id);
-      if (!el) continue;
-      if (getSectionTop(el) <= marker + 4) {
-        current = section.id;
-      }
+  const applyProgress = useCallback((value: number) => {
+    const next = clamp01(value);
+    if (Math.abs(next - progressRef.current) < 0.0005) return;
+    progressRef.current = next;
+    const fill = fillRef.current;
+    if (fill) {
+      fill.style.transform = `scale3d(${next}, 1, 1)`;
     }
+  }, []);
 
-    setActiveId(current);
-  }, [sections]);
+  const updateActiveSection = useCallback(
+    (scrollY: number) => {
+      const offset = getHeaderOffset();
+      const marker = scrollY + offset;
 
-  const updateProgress = useCallback(() => {
-    const doc = document.documentElement;
-    const max = Math.max(1, doc.scrollHeight - window.innerHeight);
-    setProgress(clamp01(window.scrollY / max));
-    updateActiveSection();
-  }, [updateActiveSection]);
+      let current = sections[0]?.id ?? "top";
+
+      for (const section of sections) {
+        const el = document.getElementById(section.id);
+        if (!el) continue;
+        if (getSectionTop(el) <= marker + 4) {
+          current = section.id;
+        }
+      }
+
+      setActiveId((prev) => (prev === current ? prev : current));
+    },
+    [sections],
+  );
+
+  const updateFromScroll = useCallback(
+    (scrollY: number) => {
+      const max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+      applyProgress(scrollY / max);
+      updateActiveSection(scrollY);
+    },
+    [applyProgress, updateActiveSection],
+  );
 
   const scrollToSection = useCallback(
     (id: string) => {
@@ -76,17 +92,19 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
   );
 
   useEffect(() => {
-    updateProgress();
+    const initialY = lenis?.scroll ?? window.scrollY;
+    updateFromScroll(initialY);
 
     if (lenis) {
-      lenis.on("scroll", updateProgress);
-      return () => lenis.off("scroll", updateProgress);
+      const onScroll = ({ scroll }: { scroll: number }) => updateFromScroll(scroll);
+      lenis.on("scroll", onScroll);
+      return () => lenis.off("scroll", onScroll);
     }
 
     let raf = 0;
     const onScroll = () => {
       cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(updateProgress);
+      raf = requestAnimationFrame(() => updateFromScroll(window.scrollY));
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -96,7 +114,7 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [lenis, updateProgress]);
+  }, [lenis, updateFromScroll]);
 
   useEffect(() => {
     const hash = window.location.hash.replace("#", "");
@@ -108,10 +126,7 @@ export function ScrollProgress({ sections }: ScrollProgressProps) {
   return (
     <>
       <div className="scroll-progress-track" aria-hidden="true">
-        <div
-          className="scroll-progress-fill"
-          style={{ transform: `scaleX(${progress})` }}
-        />
+        <div ref={fillRef} className="scroll-progress-fill" />
       </div>
 
       <aside className="scroll-nav">
