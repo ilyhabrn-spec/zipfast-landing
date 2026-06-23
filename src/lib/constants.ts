@@ -16,6 +16,9 @@ export const contacts = {
   phoneHref: "tel:+79628062770",
   email: "ilyhabrn@icloud.com",
   emailHref: "mailto:ilyhabrn@icloud.com",
+  /** MAX: персональная ссылка на чат из QR (Профиль → QR → Поделиться) */
+  maxChatHref:
+    "https://max.ru/u/f9LHodD0cOKXzFuataIHHHmw1n1_EmIxf0en2UhDHgOxnLPgJ7cXoO3Z5RU",
 } as const;
 
 export const socials = [
@@ -32,7 +35,7 @@ export const socials = [
   {
     id: "max",
     label: "MAX",
-    href: "https://max.ru/",
+    href: contacts.maxChatHref,
   },
 ] as const;
 
